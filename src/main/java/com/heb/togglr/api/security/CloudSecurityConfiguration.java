@@ -12,8 +12,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 import com.heb.togglr.api.security.cloud.RestAuthSuccessHandler;
+import com.heb.togglr.api.security.cloud.RestAuthFailureHandler;
 import com.heb.togglr.api.security.jwt.JwtAuthenticationFilter;
 import com.heb.togglr.api.security.jwt.LogoutHandler;
 import com.heb.togglr.api.config.PreflightFilter;
@@ -54,7 +56,8 @@ public class CloudSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .formLogin()
                 .loginProcessingUrl("/login")
-                .successHandler(this.restAuthSuccessHandler);
+                .successHandler(this.restAuthSuccessHandler)
+                .failureHandler(customAuthenticationFailureHandler());
         http
                 .logout().logoutUrl("/logout")
                 .logoutSuccessHandler(this.logutHandler);
@@ -77,5 +80,10 @@ public class CloudSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public PreflightFilter preflightFilter(){
         return new PreflightFilter();
+    }
+
+    @Bean
+    public AuthenticationFailureHandler customAuthenticationFailureHandler() {
+        return new RestAuthFailureHandler();
     }
 }
