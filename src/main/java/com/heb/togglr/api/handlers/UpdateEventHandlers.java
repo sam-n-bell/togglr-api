@@ -6,6 +6,7 @@ import org.springframework.data.rest.core.annotation.HandleAfterCreate;
 import org.springframework.data.rest.core.annotation.HandleAfterSave;
 import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -97,7 +98,8 @@ public class UpdateEventHandlers {
         }
     }
 
-    private void callWebhook(String webhookUrl){
+    @Async
+    public void callWebhook(String webhookUrl){
         if(webhookUrl != null) {
             logger.debug("Calling webhook, triggered by update.");
             logger.trace("Webhook URL: " + webhookUrl);
@@ -107,6 +109,7 @@ public class UpdateEventHandlers {
                     logger.debug("Webhook update successful.");
                 }
             }catch (RestClientException e){
+                logger.error("Bad Webhook URL");
                 logger.error(e.getMessage());
             }
         }
