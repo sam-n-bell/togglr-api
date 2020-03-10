@@ -9,13 +9,19 @@
  */
 package com.heb.togglr.api.security.jwt;
 
+import com.heb.togglr.api.entities.SuperAdminsEntity;
+import com.heb.togglr.api.repositories.SuperAdminRepository;
 import com.heb.togglr.api.security.jwt.service.JwtService;
 import io.jsonwebtoken.JwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
@@ -29,6 +35,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @author m228250
@@ -45,6 +53,9 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     private String cookieDomain;
 
     private JwtService jwtService;
+
+    @Autowired
+    private SuperAdminRepository superAdminRepository;
 
     public JwtAuthenticationFilter(JwtService jwtService){
         this.jwtService = jwtService;
@@ -64,7 +75,15 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 if (this.jwtService.isValidToken(authToken, true)) {
-                    UserDetails user = this.jwtService.getUserFromToken(authToken);
+
+                    final String ROLE_PREFIX = "ROLE_";
+                    Optional<SuperAdminsEntity> superAdmin = superAdminRepository.findById(username);
+                    List<GrantedAuthority> userRoles = new ArrayList<>();
+                    if (superAdmin.isPresent()) {
+                        userRoles.add(new SimpleGrantedAuthority(ROLE_PREFIX + "SUPERADMIN"));
+                    }
+
+                    UserDetails user = new User(username, "", true, true, true, true, userRoles);
 
                     UsernamePasswordAuthenticationToken authentication =
                             new UsernamePasswordAuthenticationToken(user, authToken, new ArrayList<>());

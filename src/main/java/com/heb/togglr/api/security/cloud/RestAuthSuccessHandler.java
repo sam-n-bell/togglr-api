@@ -55,10 +55,6 @@ public class RestAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandle
             userRoles.add(new SimpleGrantedAuthority(ROLE_PREFIX + "SUPERADMIN"));
         }
 
-        for (GrantedAuthority grantedAuthority: userRoles) {
-            System.out.println(grantedAuthority.getAuthority());
-        }
-
         User userDetails = new User(authentication.getName(), "",  true, true, true, true, userRoles);
 
         String jwt = this.jwtService.generateToken(userDetails);
