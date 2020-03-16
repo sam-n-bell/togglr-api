@@ -67,6 +67,7 @@ public class CloudSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/login").permitAll()
+                .antMatchers("/ssologin").permitAll()
                 .antMatchers("/error").permitAll()
                 .antMatchers("/features/active").permitAll()
                 .antMatchers("/togglr/update").permitAll()
