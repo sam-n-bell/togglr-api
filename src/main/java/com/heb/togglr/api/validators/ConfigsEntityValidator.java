@@ -17,11 +17,11 @@ public class ConfigsEntityValidator implements Validator {
     public void validate(Object target, Errors errors) {
         ConfigsEntity configsEntity = (ConfigsEntity) target;
 
-        if (configsEntity.getKeyName().trim().length() == 0) {
+        if (configsEntity.getKeyName() == null || configsEntity.getKeyName().trim().length() == 0) {
             errors.rejectValue("keyName", "keyName.invalid");
         }
 
-        if (checkConfigKeyName(configsEntity.getConfigValue())) {
+        if (checkConfigValue(configsEntity.getConfigValue())) {
             errors.rejectValue("configValue", "configValue.invalid");
         }
 
@@ -51,9 +51,9 @@ public class ConfigsEntityValidator implements Validator {
      * @param input
      * @return
      */
-    private boolean checkConfigKeyName(String input) {
+    private boolean checkConfigValue(String input) {
         String pattern = "^[-a-zA-Z0-9]+$"; //alphanumeric and hyphens
-        return (input.trim().length() == 0 || !input.matches(pattern));
+        return (input == null || input.trim().length() == 0 || !input.matches(pattern));
     }
 
 
