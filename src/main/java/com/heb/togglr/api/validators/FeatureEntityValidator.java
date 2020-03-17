@@ -10,7 +10,7 @@ import org.springframework.validation.Validator;
 public class FeatureEntityValidator implements Validator {
     @Override
     public boolean supports(Class<?> clazz) {
-    return ConfigsEntity.class.equals(clazz);
+    return FeatureEntity.class.equals(clazz);
 }
 
     @Override
