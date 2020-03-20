@@ -18,19 +18,21 @@ public class ConfigsEntityValidator implements Validator {
         ConfigsEntity configsEntity = (ConfigsEntity) target;
 
         if (configsEntity.getKeyName() == null || configsEntity.getKeyName().trim().length() == 0) {
-            errors.rejectValue("keyName", "keyName.invalid");
+            errors.rejectValue("keyName", "missing keyName");
         }
 
-        if (checkConfigValue(configsEntity.getConfigValue())) {
-            errors.rejectValue("configValue", "configValue.invalid");
+        if (configsEntity.getConfigValue() == null) {
+            errors.rejectValue("configValue", "missing configValue");
+        } else if (checkConfigValue(configsEntity.getConfigValue())) {
+            errors.rejectValue("configValue", "configValue is not valid");
         }
 
         if (idIsInvalid(configsEntity.getAppId())) {
-            errors.rejectValue("appId", "appId.invalid");
+            errors.rejectValue("appId", "appId is not valid");
         }
 
         if (idIsInvalid(configsEntity.getFeatureId())) {
-            errors.rejectValue("featureId", "featureId.invalid");
+            errors.rejectValue("featureId", "featureId is not valid");
         }
 
     }
@@ -53,7 +55,7 @@ public class ConfigsEntityValidator implements Validator {
      */
     private boolean checkConfigValue(String input) {
         String pattern = "^[-a-zA-Z0-9]+$"; //alphanumeric and hyphens
-        return (input == null || input.trim().length() == 0 || !input.matches(pattern));
+        return (input.trim().length() == 0 || !input.matches(pattern));
     }
 
 
