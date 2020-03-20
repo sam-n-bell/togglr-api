@@ -50,7 +50,8 @@ app:
     tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
     tokenExpirationMsec: 864000000
   oauth2:
-    sso_url: SSO_URL
+    sso:
+      url: ${SSO_URL}
     # After successfully authenticating with the OAuth2 Provider,
     # we'll be generating an auth token for the user and sending the token to the
     # redirectUri mentioned by the frontend client in the /oauth2/authorize request.

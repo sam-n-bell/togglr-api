@@ -10,6 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 public class TogglrApiApplication {
 
     public static void main(String[] args) {
+        System.out.println(System.getenv("SSO_URL"));
         SpringApplication.run(TogglrApiApplication.class, args);
     }
 }
