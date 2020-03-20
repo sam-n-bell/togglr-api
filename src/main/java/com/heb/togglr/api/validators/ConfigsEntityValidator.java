@@ -1,12 +1,26 @@
 package com.heb.togglr.api.validators;
 
+import com.heb.togglr.api.entities.AppEntity;
 import com.heb.togglr.api.entities.ConfigsEntity;
+import com.heb.togglr.api.entities.FeatureEntity;
+import com.heb.togglr.api.repositories.ApplicationsRepository;
+import com.heb.togglr.api.repositories.ConfigsRepository;
+import com.heb.togglr.api.repositories.FeatureRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import java.util.Optional;
+
 @Component("beforeCreateConfigsEntityValidator")
 public class ConfigsEntityValidator implements Validator {
+
+    @Autowired
+    ApplicationsRepository applicationsRepository;
+
+    @Autowired
+    FeatureRepository featureRepository;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -18,32 +32,56 @@ public class ConfigsEntityValidator implements Validator {
         ConfigsEntity configsEntity = (ConfigsEntity) target;
 
         if (configsEntity.getKeyName() == null || configsEntity.getKeyName().trim().length() == 0) {
-            errors.rejectValue("keyName", "missing keyName");
+            errors.rejectValue("keyName", "missing valid keyName property");
         }
 
         if (configsEntity.getConfigValue() == null) {
-            errors.rejectValue("configValue", "missing configValue");
+            errors.rejectValue("configValue", "missing valid configValue property");
         } else if (checkConfigValue(configsEntity.getConfigValue())) {
             errors.rejectValue("configValue", "configValue is not valid");
         }
 
-        if (idIsInvalid(configsEntity.getAppId())) {
+        if (isAppIdValid(configsEntity.getAppId())) {
             errors.rejectValue("appId", "appId is not valid");
         }
 
-        if (idIsInvalid(configsEntity.getFeatureId())) {
+        if (isFeatureIdValid(configsEntity.getFeatureId())) {
             errors.rejectValue("featureId", "featureId is not valid");
         }
 
     }
 
     /**
-     * Make sure that an ID (integer) exists and is valid
+     * Make sure that an App ID (integer) exists and is valid
      * @param id
      * @return
      */
-    private boolean idIsInvalid(Integer id) {
-        return (id == null || id < 1);
+    private boolean isAppIdValid(Integer id) {
+
+        if (id == null || id < 1) {
+            return false;
+        }
+
+        Optional<AppEntity> appEntity = applicationsRepository.findById(id);
+        if (!appEntity.isPresent()) {return false;}
+
+        return true;
+    }
+
+    /**
+     * Make sure that a feature ID (integer) exists and is valid
+     * @param id
+     * @return
+     */
+    private boolean isFeatureIdValid(Integer id) {
+        if (id == null || id < 1) {
+            return false;
+        }
+
+        Optional<FeatureEntity> featureEntity = featureRepository.findById(id);
+        if (!featureEntity.isPresent()) {return false;}
+
+        return true;
     }
 
     /**

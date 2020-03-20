@@ -21,28 +21,28 @@ public class FeatureEntityValidator implements Validator {
          * Check that descr is present/valid
          */
         if (featureEntity.getDescr() == null || featureEntity.getDescr().trim().length() == 0) {
-            errors.rejectValue("descr", "descr.required");
+            errors.rejectValue("descr", "missing valid descr property");
         }
 
         /**
          * Check that appId is present/valid
          */
         if (featureEntity.getAppId() == null) {
-            errors.rejectValue("appId", "appId.required");
+            errors.rejectValue("appId", "missing valid appId property");
         }
 
         /**
          * Check that negation is present
          */
         if (featureEntity.getNegation() == null) {
-            errors.rejectValue("negation", "negation.required");
+            errors.rejectValue("negation", "missing negation property");
         }
 
         /**
          * Check that active is present
          */
         if (featureEntity.getActive() == null) {
-            errors.rejectValue("active", "active.required");
+            errors.rejectValue("active", "missing active property");
         }
     }
 }

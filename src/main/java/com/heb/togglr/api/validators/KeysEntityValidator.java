@@ -21,11 +21,11 @@ public class KeysEntityValidator implements Validator {
         KeysEntity keysEntity = (KeysEntity) target;
 
         if (checkKeyName(keysEntity.getKeyName())) {
-            errors.rejectValue("keyname", "keyname.invalid");
+            errors.rejectValue("keyname", "missing or contains invalid keyName property");
         }
 
         if (keysEntity.getAppId() == null) {
-            errors.rejectValue("appId", "appdId.required");
+            errors.rejectValue("appId", "missing appId property");
         }
 
 
