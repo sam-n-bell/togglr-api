@@ -1,5 +1,8 @@
 package com.heb.togglr.api.entities;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import java.util.Collection;
 import java.util.Objects;
 
@@ -14,12 +17,17 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
+@SQLDelete(sql = "UPDATE togglr.app " +
+                "SET DELETED = true " +
+                "WHERE id = ?")
+@Where(clause = "deleted = false")
 @Table(name ="APP", schema = "togglr")
 public class AppEntity {
     private Integer id;
     private String name;
     private String descr;
     private String webhookUrl;
+    private boolean deleted;
     private Collection<AdminsEntity> adminsById;
     private Collection<ConfigsEntity> configsById;
     private Collection<FeatureEntity> featuresById;
@@ -65,6 +73,12 @@ public class AppEntity {
     public void setWebhookUrl(String webhookUrl) {
         this.webhookUrl = webhookUrl;
     }
+
+    @Basic
+    @Column(name = "deleted", columnDefinition = "TINYINT(0)")
+    public boolean getDeleted() { return deleted; }
+
+    public void setDeleted(boolean deleted) { this.deleted = deleted; }
 
     @Override
     public boolean equals(Object o) {
