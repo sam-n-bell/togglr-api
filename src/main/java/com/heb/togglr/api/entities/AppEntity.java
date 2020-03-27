@@ -18,16 +18,16 @@ import javax.persistence.Table;
 
 @Entity
 @SQLDelete(sql = "UPDATE togglr.app " +
-                "SET DELETED = true " +
+                "SET DELETED = 1 " +
                 "WHERE id = ?")
-@Where(clause = "deleted = false")
+@Where(clause = "DELETED = 0")
 @Table(name ="APP", schema = "togglr")
 public class AppEntity {
     private Integer id;
     private String name;
     private String descr;
     private String webhookUrl;
-    private boolean deleted;
+    private Boolean deleted;
     private Collection<AdminsEntity> adminsById;
     private Collection<ConfigsEntity> configsById;
     private Collection<FeatureEntity> featuresById;
@@ -75,7 +75,7 @@ public class AppEntity {
     }
 
     @Basic
-    @Column(name = "deleted", columnDefinition = "TINYINT(0)")
+    @Column(name = "DELETED")
     public boolean getDeleted() { return deleted; }
 
     public void setDeleted(boolean deleted) { this.deleted = deleted; }
@@ -96,7 +96,7 @@ public class AppEntity {
         return Objects.hash(id, name, descr);
     }
 
-    @OneToMany(mappedBy = "appByAppId", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "appByAppId")
     public Collection<AdminsEntity> getAdminsById() {
         return adminsById;
     }

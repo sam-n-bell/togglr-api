@@ -8,8 +8,14 @@ import java.util.Objects;
 import javax.persistence.*;
 
 import com.heb.togglr.api.client.model.response.FeatureResponse;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Entity
+@SQLDelete(sql = "UPDATE togglr.feature " +
+        "SET DELETED = 1 " +
+        "WHERE id = ?")
+@Where(clause = "DELETED = 0")
 @Table(name = "FEATURE", schema = "togglr")
 public class FeatureEntity {
     private Integer id;
@@ -17,6 +23,7 @@ public class FeatureEntity {
     private Integer appId;
     private Boolean active;
     private Boolean negation;
+    private Boolean deleted;
     private Collection<ConfigsEntity> configsById;
     private AppEntity appByAppId;
 
@@ -60,6 +67,12 @@ public class FeatureEntity {
     public void setActive(Boolean active) {
         this.active = active;
     }
+
+    @Basic
+    @Column(name = "DELETED")
+    public boolean getDeleted() { return deleted; }
+
+    public void setDeleted(boolean deleted) { this.deleted = deleted; }
 
     @Basic
     @Column(name = "NEGATION")

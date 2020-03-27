@@ -1,6 +1,7 @@
 package com.heb.togglr.api.controllers;
 
 import com.heb.togglr.api.entities.AdminsEntity;
+import com.heb.togglr.api.entities.AdminsEntityPK;
 import com.heb.togglr.api.entities.AppEntity;
 import com.heb.togglr.api.repositories.AdminRepository;
 import com.heb.togglr.api.repositories.ApplicationsRepository;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RepositoryRestController
 public class AppController {
@@ -100,5 +102,26 @@ public class AppController {
         Resources<AppEntity> resources = new Resources(resourcelist);
 
         return resources;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value="/appEntities/deleted")
+    @ResponseBody
+    public Resources getDeletedApplicationsForUser() {
+      // get apps only that user should be able to see
+        String userId = ((UserDetails)SecurityContextHolder.getContext().getAuthentication().getDetails()).getUsername();
+        List<AppEntity> appEntities = this.applicationsRepository.findAllDeletedByAdminsById_Id(userId);
+        Resources<AppEntity> resources = new Resources(appEntities);
+        return resources;
+    }
+
+    @RequestMapping(method = RequestMethod.PATCH, value="/appEntities/{appId}/recover")
+    @ResponseBody
+    public void recoverDeletedApplication(@PathVariable int appId) {
+        String userId = ((UserDetails)SecurityContextHolder.getContext().getAuthentication().getDetails()).getUsername();
+        AppEntity appEntity = applicationsRepository.findSoftDeletedById(appId);
+        if (appEntity != null) {
+            appEntity.setDeleted(false);
+            applicationsRepository.save(appEntity);
+        }
     }
 }
