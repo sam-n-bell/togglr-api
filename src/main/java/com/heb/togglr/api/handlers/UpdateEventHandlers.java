@@ -109,7 +109,7 @@ public class UpdateEventHandlers {
                     logger.debug("Webhook update successful.");
                 }
             }catch (RestClientException e){
-                logger.debug("Bad Webhook URL");
+                logger.error("Bad Webhook URL");
                 logger.error(e.getMessage());
             }
         }

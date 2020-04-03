@@ -3,15 +3,22 @@ package com.heb.togglr.api.security.cloud;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.heb.togglr.api.entities.SuperAdminsEntity;
+import com.heb.togglr.api.repositories.SuperAdminRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -30,6 +37,8 @@ public class RestAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandle
 
     private JwtService jwtService;
 
+    @Autowired
+    private SuperAdminRepository superAdminRepository;
 
     public RestAuthSuccessHandler(JwtService jwtService){
         this.jwtService = jwtService;
@@ -38,7 +47,15 @@ public class RestAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandle
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
-        User userDetails = new User(authentication.getName(), "",  true, true, true, true, new ArrayList<>());
+        final String ROLE_PREFIX = "ROLE_";
+
+        Optional<SuperAdminsEntity> superAdmin = superAdminRepository.findById(authentication.getName());
+        List<GrantedAuthority> userRoles = new ArrayList<>();
+        if (superAdmin.isPresent()) {
+            userRoles.add(new SimpleGrantedAuthority(ROLE_PREFIX + "SUPERADMIN"));
+        }
+
+        User userDetails = new User(authentication.getName(), "",  true, true, true, true, userRoles);
 
         String jwt = this.jwtService.generateToken(userDetails);
 
