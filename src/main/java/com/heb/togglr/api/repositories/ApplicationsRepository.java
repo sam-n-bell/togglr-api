@@ -16,10 +16,10 @@ public interface ApplicationsRepository extends CrudRepository<AppEntity, Intege
             "FROM togglr.admins ad " +
             "JOIN togglr.app ap ON ap.id = ad.app_id " +
             "WHERE ad.id = ?1 and ap.deleted = 1;")
-    public List<AppEntity> findAllDeletedByAdminsById_Id(String id);
+    public List<AppEntity> findByAdminsById_IdAndDeletedIsTrue(String id);
 
-    @Query(nativeQuery = true, value = "SELECT * FROM togglr.app WHERE id = ?1")
-    public AppEntity findSoftDeletedById(int id);
+    @Query(nativeQuery = true, value = "SELECT * FROM togglr.app WHERE id = ?1 and deleted = 1")
+    public AppEntity findByIdAndDeletedIsTrue(int id);
 
     public AppEntity findById(@RequestParam int id, Sort sort);
 

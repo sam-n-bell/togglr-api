@@ -109,7 +109,7 @@ public class AppController {
     public Resources getDeletedApplicationsForUser() {
       // get apps only that user should be able to see
         String userId = ((UserDetails)SecurityContextHolder.getContext().getAuthentication().getDetails()).getUsername();
-        List<AppEntity> appEntities = this.applicationsRepository.findAllDeletedByAdminsById_Id(userId);
+        List<AppEntity> appEntities = this.applicationsRepository.findByAdminsById_IdAndDeletedIsTrue(userId);
         Resources<AppEntity> resources = new Resources(appEntities);
         return resources;
     }
@@ -118,10 +118,10 @@ public class AppController {
     @ResponseBody
     public void recoverDeletedApplication(@PathVariable int appId) {
         String userId = ((UserDetails)SecurityContextHolder.getContext().getAuthentication().getDetails()).getUsername();
-        AppEntity appEntity = applicationsRepository.findSoftDeletedById(appId);
+        AppEntity appEntity = this.applicationsRepository.findByIdAndDeletedIsTrue(appId);
         if (appEntity != null) {
             appEntity.setDeleted(false);
-            applicationsRepository.save(appEntity);
+            this.applicationsRepository.save(appEntity);
         }
     }
 }

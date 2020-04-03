@@ -1,13 +1,8 @@
 package com.heb.togglr.api.controllers;
 
 import java.util.Collection;
-import java.util.List;
 
-import com.heb.togglr.api.entities.AppEntity;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
-import org.springframework.hateoas.Resources;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -50,24 +45,13 @@ public class FeatureEntitiesController {
         this.featureRepository.delete(featureEntity);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value="/featureEntities/{featureId}/deleted")
+    @RequestMapping(method = RequestMethod.PATCH, value = "/featureEntities/{featureId}/recover")
     @ResponseBody
-    public Resources getDeletedFeaturesForApplication(int featureId) {
-        // get apps only that user should be able to see
-        String userId = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails()).getUsername();
-        List<FeatureEntity> features = this.featureRepository.findByAppIdAndDeletedIsTrue(featureId);
-        Resources<AppEntity> resources = new Resources(features);
-        return resources;
+    public void recoverFeature(@PathVariable int featureId) {
+        FeatureEntity featureEntity = this.featureRepository.findByIdAndDeletedIsTrue((featureId));
+        if (featureEntity != null) {
+            featureEntity.setDeleted(false);
+            this.featureRepository.save(featureEntity);
+        }
     }
-
-//    @RequestMapping(method = RequestMethod.PATCH, value="/appEntities/{appId}/recover")
-//    @ResponseBody
-//    public void recoverDeletedApplication(@PathVariable int appId) {
-//        String userId = ((UserDetails)SecurityContextHolder.getContext().getAuthentication().getDetails()).getUsername();
-//        AppEntity appEntity = applicationsRepository.findSoftDeletedById(appId);
-//        if (appEntity != null) {
-//            appEntity.setDeleted(false);
-//            applicationsRepository.save(appEntity);
-//        }
-//    }
 }
