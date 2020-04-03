@@ -1,24 +1,24 @@
 package com.heb.togglr.api.entities;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import java.util.Collection;
 import java.util.Objects;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
+@SQLDelete(sql = "UPDATE togglr.key_names " +
+        "SET DELETED = 1 " +
+        "WHERE KEY_NAME = ? and APP_ID = ?")
+@Where(clause = "DELETED = 0")
 @Table(name = "KEY_NAMES", schema = "togglr")
 @IdClass(KeysEntityPK.class)
 public class KeysEntity {
     private Integer appId;
     private String keyName;
+    private Boolean deleted;
     private Collection<ConfigsEntity> configsByAppIdAndKeyName;
     private AppEntity appByAppId;
 
@@ -41,6 +41,12 @@ public class KeysEntity {
     public void setKeyName(String keyName) {
         this.keyName = keyName;
     }
+
+    @Basic
+    @Column(name = "DELETED")
+    public Boolean getDeleted() { return deleted; }
+
+    public void setDeleted(Boolean deleted) { this.deleted = deleted; }
 
     @Override
     public boolean equals(Object o) {

@@ -11,4 +11,7 @@ import java.util.List;
 public interface KeysRepository extends CrudRepository<KeysEntity, KeysEntityPK> {
 
     List<KeysEntity> findByAppId(int appId, Sort sort);
+
+    List<KeysEntity> findByAppIdAndDeletedIsTrue(int appId, Sort sort);
+
 }
