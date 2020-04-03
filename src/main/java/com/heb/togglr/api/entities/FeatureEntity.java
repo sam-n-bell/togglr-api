@@ -1,9 +1,6 @@
 package com.heb.togglr.api.entities;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import javax.persistence.*;
 
@@ -17,8 +14,10 @@ public class FeatureEntity {
     private Integer appId;
     private Boolean active;
     private Boolean negation;
+    private Date toggled;
     private Collection<ConfigsEntity> configsById;
     private AppEntity appByAppId;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY )
@@ -67,6 +66,17 @@ public class FeatureEntity {
         return negation;
     }
 
+    @Basic
+    @Column(name = "TOGGLED")
+    public Date getToggled() {
+        return toggled;
+    }
+
+    public void setToggled(Date toggled) {
+        this.toggled = toggled;
+    }
+
+
     public void setNegation(Boolean negation) {
         this.negation = negation;
     }
@@ -80,13 +90,14 @@ public class FeatureEntity {
                 Objects.equals(descr, entity.descr) &&
                 Objects.equals(appId, entity.appId) &&
                 Objects.equals(active, entity.active) &&
-                Objects.equals(negation, entity.negation);
+                Objects.equals(negation, entity.negation) &&
+                Objects.equals(toggled, entity.toggled);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, descr, appId, active, negation);
+        return Objects.hash(id, descr, appId, active, negation, toggled);
     }
 
     @OneToMany(mappedBy = "featureByFeatureId", cascade = CascadeType.REMOVE)
@@ -115,6 +126,7 @@ public class FeatureEntity {
         response.setAppId(featureEntity.getAppId());
         response.setDescr(featureEntity.getDescr());
         response.setId(featureEntity.getId());
+        response.setToggled(featureEntity.getToggled());
 
         return response;
     }
