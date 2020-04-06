@@ -42,9 +42,9 @@ public class AdminsEntity {
 
     @Basic
     @Column(name = "DELETED", columnDefinition = "BIT DEFAULT 0")
-    public boolean getDeleted() { return deleted; }
+    public Boolean getDeleted() { return deleted; }
 
-    public void setDeleted(boolean deleted) { this.deleted = deleted; }
+    public void setDeleted(Boolean deleted) { this.deleted = deleted; }
 
     @Override
     public boolean equals(Object o) {

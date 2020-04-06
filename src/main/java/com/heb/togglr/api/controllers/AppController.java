@@ -47,6 +47,7 @@ public class AppController {
             for (AdminsEntity ae : appEntity.getAdminsById()) {
                 AdminsEntity adminsEntity = new AdminsEntity();
                 adminsEntity.setId(ae.getId());
+                adminsEntity.setDeleted(false);
                 admins.add(adminsEntity);
             }
             //Clear before we save
