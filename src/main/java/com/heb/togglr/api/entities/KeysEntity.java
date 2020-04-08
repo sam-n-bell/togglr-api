@@ -63,7 +63,7 @@ public class KeysEntity {
         return Objects.hash(appId, keyName);
     }
 
-    @OneToMany(mappedBy = "keyByKeyNameAndAppId", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "keyByKeyNameAndAppId")
     public Collection<ConfigsEntity> getConfigsByAppIdAndKeyName() {
         return configsByAppIdAndKeyName;
     }

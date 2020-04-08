@@ -104,7 +104,7 @@ public class FeatureEntity {
         return Objects.hash(id, descr, appId, active, negation);
     }
 
-    @OneToMany(mappedBy = "featureByFeatureId", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "featureByFeatureId")
     public Collection<ConfigsEntity> getConfigsById() {
         return configsById;
     }

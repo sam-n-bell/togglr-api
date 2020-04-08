@@ -1,11 +1,18 @@
 package com.heb.togglr.api.entities;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import java.util.Objects;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "CONFIGS", schema = "togglr")
+@SQLDelete(sql = "UPDATE togglr.configs SET " +
+        "deleted = 1 WHERE " +
+        "key_name = ? and feature_id = ? and config_value = ? and app_id = ?")
+@Where(clause = "DELETED = 0")
 @IdClass(ConfigsEntityPK.class)
 public class ConfigsEntity {
     private Integer appId;
@@ -15,6 +22,7 @@ public class ConfigsEntity {
     private AppEntity appByAppId;
     private KeysEntity keysEntity;
     private FeatureEntity featureByFeatureId;
+    private Boolean deleted;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY )
@@ -56,6 +64,12 @@ public class ConfigsEntity {
     public void setConfigValue(String configValue) {
         this.configValue = configValue;
     }
+
+    @Basic
+    @Column(name = "DELETED", columnDefinition = "BIT DEFAULT 0")
+    public Boolean getDeleted() { return deleted; }
+
+    public void setDeleted(Boolean deleted) { this.deleted = deleted; }
 
     @Override
     public boolean equals(Object o) {
