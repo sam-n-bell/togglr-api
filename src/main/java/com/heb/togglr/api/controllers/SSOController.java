@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class SSOController {
-//    @Value("${spring.security.oauth2.client.registration.github.redirectUri}")
-//    private String ssourl;
+    @Value("${spring.security.oauth2.client.userAuthorizationUri}")
+    private String ssourl;
 
     @RequestMapping(method = RequestMethod.GET, value = "/ssologin")
     @ResponseBody
@@ -17,7 +17,7 @@ public class SSOController {
 //        System.out.println(System.getenv("SSO_URL"));
         System.out.println("Debugging sso url");
 //        System.out.println(ssourl);
-//        return ResponseEntity.ok(ssourl);
-        return null;
+        return ResponseEntity.ok(ssourl);
+//        return null;
     }
 }
