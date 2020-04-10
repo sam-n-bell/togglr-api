@@ -46,36 +46,42 @@ spring:
 #      clientAuthenticationScheme: form
 #    resource:
 #      userInfoUri: https://graph.facebook.com/me
-#
-#
-#
-#
-#
-#
-#
 
   security:
     oauth2:
       client:
-        registration:
-          github:
-            clientId: 84aac5770303bea335e3
-            clientSecret: f8562eb2b18b849abfc8f4f2993fc2b743823c33
-#            redirectUri: "https://github.com/login/oauth/authorize?clientId=84aac5770303bea335e3"
-#            sso-url: ${ssourl}
-            redirectUri: 'http://localhost:8080/oauth2/authorize/github?redirect_uri=http://localhost:3000/togglr'
-            scope:
-              - user:email
-              - read:user
+        clientId: ${SSOCLIENTID}
+        clientSecret: ${SSOCLIENTSECRET}
+        accessTokenUri: ${SSOACCESSTOKENURI}
+        userAuthorizationUri: ${SSOUSERAUTHORIZATIONURI}
+        clientAuthenticationScheme: ${SSOCLIENTAUTHENTICATIONSCHEME}
+        redirectUri: ${SSOREDIRECTURI}
+      resource:
+        userInfoUri: ${SSOUSERINFOURI}
+        preferTokenInfo: false
+
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          github:
+#            clientId: 84aac5770303bea335e3
+#            clientSecret: f8562eb2b18b849abfc8f4f2993fc2b743823c33
+##            redirectUri: "https://github.com/login/oauth/authorize?clientId=84aac5770303bea335e3"
+##            sso-url: ${ssourl}
+#            redirectUri: 'http://localhost:8080/oauth2/authorize/github?redirect_uri=http://localhost:3000/togglr'
+#            scope:
+#              - user:email
+#              - read:user
 app:
   auth:
     tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
     tokenExpirationMsec: 864000000
-  oauth2:
-#    sso_url: ${SSO_URL}
-    # After successfully authenticating with the OAuth2 Provider,
-    # we'll be generating an auth token for the user and sending the token to the
-    # redirectUri mentioned by the frontend client in the /oauth2/authorize request.
-    # We're not using cookies because they won't work well in mobile clients.
-    authorizedRedirectUris:
-      - http://localhost:3000/togglr
+#  oauth2:
+##    sso_url: ${SSO_URL}
+#    # After successfully authenticating with the OAuth2 Provider,
+#    # we'll be generating an auth token for the user and sending the token to the
+#    # redirectUri mentioned by the frontend client in the /oauth2/authorize request.
+#    # We're not using cookies because they won't work well in mobile clients.
+#    authorizedRedirectUris:
+#      - http://localhost:3000/togglr
