@@ -60,6 +60,20 @@ spring:
         userInfoUri: https://api.github.com/user
         preferTokenInfo: false
 
+        # sam settings
+#        security:
+#          oauth2:
+#            client:
+#              clientId: Iv1.6b40905717dc97ea
+#              clientSecret: d0c0440a74e5e301e87d78d344d09e07de92c092
+#              accessTokenUri: https://github.com/login/oauth/access_token
+#              userAuthorizationUri: https://github.com/login/oauth/authorize?client_id=Iv1.6b40905717dc97ea&redirect_uri=http://localhost:8080/togglr-api/oauth/signin/callback
+#              clientAuthenticationScheme: form
+#              redirectUri: http://localhost:8080/togglr-api//oauth/signin/callback
+#            resource:
+#              userInfoUri: https://api.github.com/user
+#              preferTokenInfo: false
+
 #  security:
 #    oauth2:
 #      client:
