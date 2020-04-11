@@ -15,14 +15,9 @@ public interface ConfigsRepository extends CrudRepository<ConfigsEntity, Configs
     List<ConfigsEntity> findByAppIdAndFeatureId(@RequestParam("appId") int appId, @RequestParam("featureId") int featureId);
 
     @Query(nativeQuery = true, value = "SELECT * FROM togglr.configs " +
-                                        "WHERE app_id = ?1 AND feature_id = ?2 " +
-                                        "AND deleted = 1")
-    List<ConfigsEntity> findByAppIdAndFeatureIdAndDeletedIsTrue(int appId, int featureId);
-
-    @Query(nativeQuery = true, value = "SELECT * FROM togglr.configs " +
-            "WHERE app_id = ?1 AND feature_id = ?2 and key_name = ?3 " +
+            "WHERE app_id = ?1 and and key_name = ?2 and feature_id = ?3" +
             "AND deleted = 1")
-    List<ConfigsEntity> findByAppIdAndFeatureIdAndKeyNameAndDeletedIsTrue(int appId, int featureId, String keyName);
+    List<ConfigsEntity> findByAppIdAndFeatureIdAndKeyNameAndDeletedIsTrue(int appId, String keyName, int featureId);
 
     @Query(nativeQuery = true, value = "SELECT * FROM togglr.configs " +
             "WHERE app_id = ?1 AND key_name = ?2 and feature_id = ?3 " +
