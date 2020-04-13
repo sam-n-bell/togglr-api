@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.heb.togglr.api.models.responses.WebhookResponse;
 import javassist.tools.web.BadHttpRequest;
+import org.apache.catalina.filters.ExpiresFilter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.HttpEntity;
@@ -13,6 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -44,7 +48,7 @@ public class SSOController {
 
     @RequestMapping(method = RequestMethod.GET, value="/oauth/signin/callback")
     @ResponseBody
-    public ResponseEntity<?> handleCode(@RequestParam(defaultValue = "None") String code) {
+    public void handleCode(@RequestParam(defaultValue = "None") String code, HttpServletResponse httpServletResponse) throws IOException {
         // Shikha - the code below is able to get the access token back from the temp code
 
         // checking the temp code from the url params
@@ -95,6 +99,14 @@ public class SSOController {
         // 1. return the token from above to the UI
         // 2. tell UI to redirect the user inside of Togglr?
 
-        return ResponseEntity.ok(code.toString());
+        Cookie cookie = new Cookie("TEST-TOKEN", token);
+        cookie.setMaxAge(1000);
+        cookie.setDomain("localhost");
+        cookie.setPath("/");
+        httpServletResponse.addCookie(cookie);
+        httpServletResponse.sendRedirect("http://localhost:3000/togglr");
+
+
+
     }
 }
