@@ -7,10 +7,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
@@ -25,7 +27,7 @@ import com.heb.togglr.api.config.PreflightFilter;
 @Configuration
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @EnableGlobalMethodSecurity(prePostEnabled = true, jsr250Enabled = true, securedEnabled = true)
-public class CloudSecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class CloudSecurityConfiguration extends ResourceServerConfigurerAdapter {
 
 
     private LogoutHandler logutHandler;
@@ -64,10 +66,11 @@ public class CloudSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .addFilterBefore(this.jwtAuthenticationFilter, BasicAuthenticationFilter.class)
                 .addFilterAfter(this.preflightFilter(), BasicAuthenticationFilter.class);
+
         http
                 .authorizeRequests()
                 .antMatchers("/login").permitAll()
-                .antMatchers("/ssologin").permitAll()
+                .antMatchers("/ssologin/").permitAll()
                 .antMatchers("/oauth/signin/callback").permitAll()
                 .antMatchers("/error").permitAll()
                 .antMatchers("/features/active").permitAll()

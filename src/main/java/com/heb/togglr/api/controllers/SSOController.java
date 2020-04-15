@@ -19,7 +19,7 @@ import java.util.Optional;
 @RestController
 public class SSOController {
     @Value("${spring.security.oauth2.client.userAuthorizationUri}")
-    private String ssourl;
+    private String userAuthorizationUri;
 
     @Value("${spring.security.oauth2.client.clientSecret}")
     private String clientSecret;
@@ -30,16 +30,22 @@ public class SSOController {
     @Value("${spring.security.oauth2.client.accessTokenUri}")
     private String accessTokenUri;
 
+    @Value("${spring.security.oauth2.client.redirectUri}")
+    private String redirectUri;
+
     private RestTemplate restTemplate = new RestTemplate();;
 
     @RequestMapping(method = RequestMethod.GET, value = "/ssologin")
     @ResponseBody
     public ResponseEntity<?> ssologin() {
-//        System.out.println(System.getenv("SSO_URL"));
-        System.out.println("Debugging sso url");
-//        System.out.println(ssourl);
-        return ResponseEntity.ok(ssourl);
-//        return null;
+//        https://github.com/login/oauth/authorize?client_id=Iv1.6b40905717dc97ea&redirect_uri=http://localhost:8080/togglr-api/oauth/signin/callback
+        StringBuilder ssoUrl = new StringBuilder();
+
+        ssoUrl.append(this.userAuthorizationUri)
+                .append("client_id=").append(this.clientId)
+                .append("&redirect_uri=").append(this.redirectUri);
+
+        return ResponseEntity.ok(ssoUrl.toString());
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/oauth/signin/callback")

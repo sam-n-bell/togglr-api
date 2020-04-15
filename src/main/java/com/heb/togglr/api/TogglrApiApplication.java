@@ -8,13 +8,13 @@ import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 //import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 
 
-//@EnableResourceServer
-
-@EnableOAuth2Sso
-@EnableConfigurationProperties(AppProperties.class)
+@EnableResourceServer
+//@EnableOAuth2Sso
+//@EnableConfigurationProperties(AppProperties.class)
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.heb.togglr"})
 public class TogglrApiApplication {
