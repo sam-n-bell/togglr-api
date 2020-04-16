@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.security.Principal;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -38,7 +39,6 @@ public class SSOController {
     @RequestMapping(method = RequestMethod.GET, value = "/ssologin")
     @ResponseBody
     public ResponseEntity<?> ssologin() {
-//        https://github.com/login/oauth/authorize?client_id=Iv1.6b40905717dc97ea&redirect_uri=http://localhost:8080/togglr-api/oauth/signin/callback
         StringBuilder ssoUrl = new StringBuilder();
 
         ssoUrl.append(this.userAuthorizationUri)
@@ -50,9 +50,15 @@ public class SSOController {
 
     @RequestMapping(method = RequestMethod.GET, value="/oauth/signin/callback")
     @ResponseBody
-    public ResponseEntity<?> handleCode(@RequestParam(defaultValue = "None") String code) {
+    public ResponseEntity<?> handleCode(@RequestParam(defaultValue = "None") String code, Principal principal) {
         // Shikha - the code below is able to get the access token back from the temp code
 
+        try{
+            System.out.println(principal.getName());
+        } catch (Exception e) {
+            System.out.println("error in fist try");
+            System.out.println(e.getMessage());
+        }
         // checking the temp code from the url params
         System.out.println("code ========== " + code);
 
@@ -77,8 +83,6 @@ public class SSOController {
                 entity,
                 String.class);
 
-        // status code of the response of POST. Good is 200
-        System.out.println(response.getStatusCodeValue());
 
         // Now lets prepare to parse the json data that came back
         // one way to do this would be to create a new model class, but not sure of if providers send back different data
@@ -99,8 +103,33 @@ public class SSOController {
 
         // next steps:
         // 1. return the token from above to the UI
-        // 2. tell UI to redirect the user inside of Togglr?
+        // 2. tell UI to redirect the user inside of Togglr
+        // 3. How to get user object back to UI
 
-        return ResponseEntity.ok(code.toString());
+        // plan b:
+        // get user obj by doing a GET to userInfoUri (api.github.com/user)
+        // create a custom model class that contains the access token (String) and a User object from Spring
+        // fill the Spring User object with the data from userInfoUri (github)
+        // create a jwt out of the custom model
+        // send that model class back in a redirect
+
+        // current
+        // Spring gets the User details
+        // Stores that user object as a JWT, returns it to the UI
+        // UI decodes it to get the user object out
+
+
+        return ResponseEntity.ok(token);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value="/oauth/test")
+    @ResponseBody
+    public void testAuthenticatedRoute(Principal principal) {
+        try{
+            System.out.println(principal.getName());
+        } catch (Exception e) {
+            System.out.println("error in this new try");
+            System.out.println(e.getMessage());
+        }
     }
 }

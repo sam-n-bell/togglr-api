@@ -37,14 +37,14 @@ spring:
   security:
     oauth2:
       client:
-        clientId: Iv1.6b40905717dc97ea
-        clientSecret: d0c0440a74e5e301e87d78d344d09e07de92c092
-        accessTokenUri: https://github.com/login/oauth/access_token
-        redirectUri: http://localhost:8080/togglr-api/oauth/signin/callback
-        userAuthorizationUri: https://github.com/login/oauth/authorize? # query params client_id and redirect_uri
+        clientId: ${SSOCLIENTID}
+        clientSecret: ${SSOCLIENTSECRET}
+        accessTokenUri: ${SSOACCESSTOKENURI}
+        redirectUri: ${SSOREDIRECTURL}
+        userAuthorizationUri: ${SSOUSERAUTHORIZATIONURI} # query params client_id and redirect_uri
         clientAuthenticationScheme: form
       resource:
-        userInfoUri: https://api.github.com/user
+        userInfoUri: ${SSOUSERINFOURI}
         preferTokenInfo: false
 #  security:
 #    oauth2:
