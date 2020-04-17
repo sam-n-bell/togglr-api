@@ -6,6 +6,8 @@ heb:
       session:
         seconds: 600
       tokenheader: X-TOGGLR-TOKEN
+    oauth:
+      tokenheader: OAUTH-TOKEN
 logging:
   level:
     com:
@@ -46,6 +48,7 @@ spring:
       resource:
         userInfoUri: ${SSOUSERINFOURI}
         preferTokenInfo: false
+# shikha configs
 #  security:
 #    oauth2:
 #      client:
