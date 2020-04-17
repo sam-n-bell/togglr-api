@@ -13,6 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.Optional;
@@ -34,6 +38,12 @@ public class SSOController {
     @Value("${spring.security.oauth2.client.redirectUri}")
     private String redirectUri;
 
+    @Value("${heb.togglr.app-domain}")
+    private String cookieDomain;
+
+    @Value("${heb.togglr.oauth.tokenheader}")
+    private String oauthTokenHeader;
+
     private RestTemplate restTemplate = new RestTemplate();;
 
     @RequestMapping(method = RequestMethod.GET, value = "/ssologin")
@@ -42,25 +52,14 @@ public class SSOController {
         StringBuilder ssoUrl = new StringBuilder();
 
         ssoUrl.append(this.userAuthorizationUri)
-                .append("client_id=").append(this.clientId)
-                .append("&redirect_uri=").append(this.redirectUri);
+                .append("client_id=").append(this.clientId);
 
         return ResponseEntity.ok(ssoUrl.toString());
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/oauth/signin/callback")
     @ResponseBody
-    public ResponseEntity<?> handleCode(@RequestParam(defaultValue = "None") String code, Principal principal) {
-        // Shikha - the code below is able to get the access token back from the temp code
-
-        try{
-            System.out.println(principal.getName());
-        } catch (Exception e) {
-            System.out.println("error in fist try");
-            System.out.println(e.getMessage());
-        }
-        // checking the temp code from the url params
-        System.out.println("code ========== " + code);
+    public void handleCode(@RequestParam(defaultValue = "None") String code, HttpServletResponse servletResponse, Principal principal) throws IOException {
 
         // preparing to make a POST request to github to get access token
         StringBuilder accessTokenRequestUri = new StringBuilder();
@@ -74,32 +73,37 @@ public class SSOController {
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         HttpEntity<String> entity = new HttpEntity<>(null, headers);
 
-        // checking the url to make sure it's valid
-        System.out.println(accessTokenRequestUri.toString());
-
         // making the POST
         ResponseEntity<String> response = this.restTemplate.postForEntity(
                 accessTokenRequestUri.toString(),
                 entity,
                 String.class);
 
-
-        // Now lets prepare to parse the json data that came back
-        // one way to do this would be to create a new model class, but not sure of if providers send back different data
-        // so handling this more dynamically right now
-        ObjectMapper objectMapper = new ObjectMapper();
-        String token;
-
         try {
+            // Now lets prepare to parse the json data that came back
+            // one way to do this would be to create a new model class, but not sure of if providers send back different data
+            // so handling this more dynamically right now
+            ObjectMapper objectMapper = new ObjectMapper();
+            String token;
             // parse the response into a jsonnode (something i saw from Googling)
             JsonNode jsonNode = objectMapper.readTree(response.getBody());
             // try to get the access_token if it's present
             token = jsonNode.get("access_token").asText(null);
+
+            System.out.println("token = " + token);
+
+            if (token != null) {
+                Cookie cookie = new Cookie(this.oauthTokenHeader, token);
+                cookie.setDomain(this.cookieDomain);
+                cookie.setPath("/");
+                servletResponse.addCookie(cookie);
+            }
         } catch (Exception e) {
-            token = null;
+           // error log
         }
 
-        System.out.println("token = " + token);
+        servletResponse.sendRedirect(this.redirectUri);
+
 
         // next steps:
         // 1. return the token from above to the UI
@@ -113,13 +117,8 @@ public class SSOController {
         // create a jwt out of the custom model
         // send that model class back in a redirect
 
-        // current
-        // Spring gets the User details
-        // Stores that user object as a JWT, returns it to the UI
-        // UI decodes it to get the user object out
 
-
-        return ResponseEntity.ok(token);
+//        return ResponseEntity.ok(token);
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/oauth/test")
