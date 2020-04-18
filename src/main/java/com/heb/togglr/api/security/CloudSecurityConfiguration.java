@@ -60,7 +60,6 @@ public class CloudSecurityConfiguration extends ResourceServerConfigurerAdapter 
     @Bean
     public UserInfoTokenServices tokenService() {
         final UserInfoTokenServices tokenServices = new UserInfoTokenServices(this.userInfoEndPointUri, this.clientId);
-        //("https://api.github.com/user", "Iv1.6b40905717dc97ea");
         return tokenServices;
     }
 

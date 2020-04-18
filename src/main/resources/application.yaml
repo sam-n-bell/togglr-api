@@ -8,6 +8,7 @@ heb:
       tokenheader: X-TOGGLR-TOKEN
     oauth:
       tokenheader: OAUTH-TOKEN
+      userIdentification: ${SSOUSERIDFIELD}
 logging:
   level:
     com:
