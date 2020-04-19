@@ -8,7 +8,6 @@ import com.heb.togglr.api.models.responses.WebhookResponse;
 import com.heb.togglr.api.repositories.SuperAdminRepository;
 import com.heb.togglr.api.security.jwt.service.JwtService;
 import javassist.tools.web.BadHttpRequest;
-import org.apache.catalina.filters.ExpiresFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +20,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -161,6 +157,21 @@ public class SSOController {
 
         servletResponse.sendRedirect(this.redirectUri);
 
+
+        // next steps:
+        // 1. return the token from above to the UI
+        // 2. tell UI to redirect the user inside of Togglr
+        // 3. How to get user object back to UI
+
+        // plan b:
+        // get user obj by doing a GET to userInfoUri (api.github.com/user)
+        // create a custom model class that contains the access token (String) and a User object from Spring
+        // fill the Spring User object with the data from userInfoUri (github)
+        // create a jwt out of the custom model
+        // send that model class back in a redirect
+
+
+//        return ResponseEntity.ok(token);
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/oauth/test")
