@@ -14,6 +14,7 @@ import io.jsonwebtoken.JwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -44,6 +45,9 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     @Value("${heb.togglr.app-domain}")
     private String cookieDomain;
 
+    @Value("${heb.togglr.oauth.oauthEnabled}")
+    private boolean oauthEnabled;
+
     private JwtService jwtService;
 
     public JwtAuthenticationFilter(JwtService jwtService){
@@ -55,15 +59,19 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest)request;
+        System.out.println("doing filter after");
         try {
             String authToken = httpRequest.getHeader(this.tokenHeader);
+            System.out.println("togglr token is " + authToken);
             if(authToken == null){
                 throw new JwtException("No token present");
             }
             String username = this.jwtService.getUserIdFromToken(authToken);
-
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            System.out.println("username from togglr token is " + username);
+            if (username != null && (this.oauthEnabled || SecurityContextHolder.getContext().getAuthentication() == null)) {
+                System.out.println("username not null and sch get auth is null");
                 if (this.jwtService.isValidToken(authToken, true)) {
+                    System.out.println("jwtserver isvalidtoken was true");
                     UserDetails user = this.jwtService.getUserFromToken(authToken);
 
                     UsernamePasswordAuthenticationToken authentication =

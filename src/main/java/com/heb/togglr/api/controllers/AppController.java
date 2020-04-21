@@ -79,6 +79,7 @@ public class AppController {
     @RequestMapping(method = RequestMethod.GET, value = "/appEntities")
     @ResponseBody
     public Resources getApplicationsForUser(PersistentEntityResourceAssembler resourceAssembler){
+
         String userId = ((UserDetails)SecurityContextHolder.getContext().getAuthentication().getDetails()).getUsername();
 
         List<AppEntity> appEntities;
