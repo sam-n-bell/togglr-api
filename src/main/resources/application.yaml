@@ -9,11 +9,13 @@ heb:
     oauth:
       tokenheader: OAUTH-TOKEN
       userIdentification: ${SSOUSERIDFIELD}
+      oauthEnabled: ${HEBTOGGLROAUTHENABLED}
 logging:
   level:
     com:
       heb: debug
     default: debug
+    root: debug
   path: logs
 server:
   error:

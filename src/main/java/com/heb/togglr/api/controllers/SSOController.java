@@ -116,7 +116,6 @@ public class SSOController {
 
             if (token != null) {
                 // GET user info from oauth provider
-                System.out.println("About get usesr data from provider");
                 headers.setBearerAuth(token);
                 entity = new HttpEntity<>(null, headers);
                 ResponseEntity<String> userResponse = this.restTemplate.exchange(
@@ -127,9 +126,7 @@ public class SSOController {
                 );
                 String userIdentifier;
                 jsonNode = objectMapper.readTree(userResponse.getBody());
-                System.out.println("Reading the response to check property: " + this.ssoUserIdentification);
                 userIdentifier = jsonNode.get(this.ssoUserIdentification).asText();
-                System.out.println(userIdentifier + " is logged in");
 
                 SuperAdminsEntity superAdmin = this.superAdminRepository.findById(userIdentifier).orElse(null);
                 List<GrantedAuthority> userRoles = new ArrayList<>();
@@ -152,36 +149,9 @@ public class SSOController {
             }
         } catch (Exception e) {
             logger.error("Issue dealing with oauth provider: " + e.getMessage());
-            System.out.println("Issue dealing with oauth provider: " + e.getMessage());
         }
 
         servletResponse.sendRedirect(this.redirectUri);
-
-
-        // next steps:
-        // 1. return the token from above to the UI
-        // 2. tell UI to redirect the user inside of Togglr
-        // 3. How to get user object back to UI
-
-        // plan b:
-        // get user obj by doing a GET to userInfoUri (api.github.com/user)
-        // create a custom model class that contains the access token (String) and a User object from Spring
-        // fill the Spring User object with the data from userInfoUri (github)
-        // create a jwt out of the custom model
-        // send that model class back in a redirect
-
-
-//        return ResponseEntity.ok(token);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value="/oauth/test")
-    @ResponseBody
-    public void testAuthenticatedRoute(Principal principal) {
-        try{
-            System.out.println(principal.getName());
-        } catch (Exception e) {
-            System.out.println("error in this new try");
-            System.out.println(e.getMessage());
-        }
-    }
 }
