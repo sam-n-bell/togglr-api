@@ -38,14 +38,14 @@ public class ConfigsEntityValidator implements Validator {
         if (configsEntity.getConfigValue() == null) {
             errors.rejectValue("configValue", "missing valid configValue property");
         } else if (checkConfigValue(configsEntity.getConfigValue())) {
-            errors.rejectValue("configValue", "configValue is not valid");
+            errors.rejectValue("configValue", "Letters, numbers, and hyphens only for config name");
         }
 
-        if (isAppIdValid(configsEntity.getAppId())) {
+        if (!isAppIdValid(configsEntity.getAppId())) {
             errors.rejectValue("appId", "appId is not valid");
         }
 
-        if (isFeatureIdValid(configsEntity.getFeatureId())) {
+        if (!isFeatureIdValid(configsEntity.getFeatureId())) {
             errors.rejectValue("featureId", "featureId is not valid");
         }
 
@@ -78,8 +78,8 @@ public class ConfigsEntityValidator implements Validator {
             return false;
         }
 
-        Optional<FeatureEntity> featureEntity = featureRepository.findById(id);
-        if (!featureEntity.isPresent()) {return false;}
+        FeatureEntity featureEntity = featureRepository.findById(id).orElse(null);
+        if (featureEntity == null) {return false;}
 
         return true;
     }

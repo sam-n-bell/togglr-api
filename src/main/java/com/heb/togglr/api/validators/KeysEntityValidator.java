@@ -21,7 +21,7 @@ public class KeysEntityValidator implements Validator {
         KeysEntity keysEntity = (KeysEntity) target;
 
         if (checkKeyName(keysEntity.getKeyName())) {
-            errors.rejectValue("keyName", "missing or contains invalid keyName property");
+            errors.rejectValue("keyName", "missing keyName property");
         }
 
         if (keysEntity.getAppId() == null) {
@@ -29,16 +29,9 @@ public class KeysEntityValidator implements Validator {
         }
     }
 
-    /**
-     * Checks that a key name is alphanumeric and
-     * that it does not contain any special characters besides
-     * hyphens
-     * @param input
-     * @return
-     */
     private boolean checkKeyName(String input) {
-        String pattern = "^[-a-zA-Z0-9]+$"; //alphanumeric and hyphens
-        return (input.trim().length() == 0 || !input.matches(pattern));
+        String pattern = "^[-a-zA-Z0-9]+$"; //alphanumeric and hyphens regex if ever needed
+        return (input == null || input.trim().length() == 0);
     }
 
 

@@ -27,41 +27,21 @@ public class AdminsEntityValidator implements Validator {
     public void validate(Object target, Errors errors) {
         AdminsEntity adminsEntity = (AdminsEntity) target;
 
-        if (checkAdminId(adminsEntity.getId())) {
+        if (adminsEntity.getId() == null) {
             errors.rejectValue("id", "missing a valid id");
-        }
-
-        if (isAppIdValid(adminsEntity.getAppId())) {
+        } else if (isAppIdValid(adminsEntity.getAppId())) {
             errors.rejectValue("appId", "missing a valid appId");
         }
-
-
     }
 
-    /**
-     * Checks that an admin name is alphanumeric and
-     * that it does not contain any special characters besides
-     * hyphens
-     * @param input
-     * @return
-     */
-    private boolean checkAdminId(String input) {
-        String pattern = "^[-a-zA-Z0-9]+$"; //alphanumeric and hyphens
-        return (input.trim().length() == 0 || !input.matches(pattern));
-    }
 
-    /**
-     * Checks that an app Id is valid
-     * @param id
-     * @return
-     */
     private boolean isAppIdValid(Integer id) {
         if (id == null || id < 1) {
             return false;
         }
 
-        Optional<AppEntity> appEntity = applicationsRepository.findById(id);
-        if (!appEntity.isPresent()) {
+        AppEntity appEntity = this.applicationsRepository.findById(id).orElse(null);
+        if (appEntity == null) {
             return false;
         }
 
