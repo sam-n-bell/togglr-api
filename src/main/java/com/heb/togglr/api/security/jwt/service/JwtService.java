@@ -55,7 +55,6 @@ public class JwtService {
      * @return the string
      */
     public String generateToken(UserDetails user){
-        System.out.println("Saving jwt for " + user.getUsername());
         com.heb.togglr.api.entities.Jwt jwt = this.saveNewJwt(user.getUsername().toLowerCase());
         Claims claims = Jwts.claims();
 
