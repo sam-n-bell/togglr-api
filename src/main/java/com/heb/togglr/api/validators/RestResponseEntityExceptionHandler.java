@@ -30,7 +30,6 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
         CustomErrorResponse customErrorResponse = new CustomErrorResponse(HttpStatus.BAD_REQUEST, errorCodes);
 
-        System.out.println(customErrorResponse.getMessage());
         return new ResponseEntity<Object>(customErrorResponse, new HttpHeaders(),
                 HttpStatus.BAD_REQUEST);
     }
