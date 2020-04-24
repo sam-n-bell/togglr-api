@@ -27,7 +27,7 @@ public class FeatureEntityValidator implements Validator {
         /**
          * Check that appId is present/valid
          */
-        if (featureEntity.getAppId() == null) {
+        if (featureEntity.getAppId() == null || featureEntity.getAppId() < 1) {
             errors.rejectValue("appId", "missing valid appId property");
         }
 

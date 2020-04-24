@@ -29,16 +29,15 @@ public class AdminsEntityValidator implements Validator {
 
         if (adminsEntity.getId() == null) {
             errors.rejectValue("id", "missing a valid id");
-        } else if (isAppIdValid(adminsEntity.getAppId())) {
+        } else if (adminsEntity.getAppId() < 1) {
+            errors.rejectValue("appId", "Not a valid appId");
+        } else if (!isAppIdValid(adminsEntity.getAppId())) {
             errors.rejectValue("appId", "missing a valid appId");
         }
     }
 
 
     private boolean isAppIdValid(Integer id) {
-        if (id == null || id < 1) {
-            return false;
-        }
 
         AppEntity appEntity = this.applicationsRepository.findById(id).orElse(null);
         if (appEntity == null) {

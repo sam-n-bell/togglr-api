@@ -24,8 +24,8 @@ public class KeysEntityValidator implements Validator {
             errors.rejectValue("keyName", "missing keyName property");
         }
 
-        if (keysEntity.getAppId() == null) {
-            errors.rejectValue("appId", "missing appId property");
+        if (keysEntity.getAppId() == null || keysEntity.getAppId() < 1) {
+            errors.rejectValue("appId", "missing valid appId property");
         }
     }
 
