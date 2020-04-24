@@ -28,7 +28,7 @@ public class AppEntityValidator implements Validator {
         }
 
         if (appEntity.getDescr() == null || appEntity.getDescr().trim().length() == 0) {
-            errors.rejectValue("descr", "missing valid descr property");
+            errors.rejectValue("descr", "missing a valid descr property");
         }
 
     }
