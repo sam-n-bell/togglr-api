@@ -44,6 +44,21 @@ HEB_TOGGLR_CLIENT_SERVER-URL
 SPRING_PROFILES_ACTIVE
 ```
 
+### SSO/OAUTH Configurtion
+
+To use the oauth functionality, please configure the following env variables for the container
+```
+SSOCLIENTID | id provided by oauth provider
+SSOCLIENTSECRET | secret provided by oauth provider
+SSOACCESSTOKENURI | uri to receive access token from oauth provider
+SSOREDIRECTURL | where oauth provider should redirect app to
+SSOUSERAUTHORIZATIONURI | uri to login to oauth provider
+SSOUSERINFOURI | retrieve user information from oauth provider
+SSOUSERIDFIELD | Which field from oauth provider use response is the identifier you want to use
+HEBTOGGLROAUTHENABLED | true/false
+```
+
+
 #### Database Configuration
 
 
