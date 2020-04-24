@@ -11,6 +11,6 @@ import java.util.List;
 
 public interface ConfigsRepository extends CrudRepository<ConfigsEntity, ConfigsEntityPK> {
 
-    List<ConfigsEntity> findByAppIdAndFeatureId(@RequestParam("appId") int appId, @RequestParam("featureId") int featureId);
+    List<ConfigsEntity> findByAppIdAndFeatureId(int appId, int featureId);
 
 }
