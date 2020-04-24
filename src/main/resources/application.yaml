@@ -45,7 +45,7 @@ spring:
         clientSecret: ${SSOCLIENTSECRET}
         accessTokenUri: ${SSOACCESSTOKENURI}
         redirectUri: ${SSOREDIRECTURL}
-        userAuthorizationUri: ${SSOUSERAUTHORIZATIONURI} # query params client_id and redirect_uri
+        userAuthorizationUri: ${SSOUSERAUTHORIZATIONURI} # query params client_id
         clientAuthenticationScheme: form
       resource:
         userInfoUri: ${SSOUSERINFOURI}
