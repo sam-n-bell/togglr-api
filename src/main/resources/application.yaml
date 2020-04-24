@@ -15,7 +15,7 @@ logging:
     com:
       heb: debug
     default: debug
-    root: debug
+    #root: debug
   path: logs
 server:
   error:
