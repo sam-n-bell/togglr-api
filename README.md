@@ -46,7 +46,8 @@ SPRING_PROFILES_ACTIVE
 
 ### SSO/OAUTH Configurtion
 
-To use the oauth functionality, please configure the following env variables for the container
+To use the oauth functionality, please configure the following env variables for the container. Underscores are not used
+because of an issue with reading environment variables containing underscores in the Spring application.yaml
 ```
 SSOCLIENTID | id provided by oauth provider
 SSOCLIENTSECRET | secret provided by oauth provider
