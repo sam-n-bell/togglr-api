@@ -1,29 +1,22 @@
 package com.heb.togglr.api.security;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.heb.togglr.api.config.PreflightFilter;
+import com.heb.togglr.api.security.cloud.RestAuthFailureHandler;
+import com.heb.togglr.api.security.cloud.RestAuthSuccessHandler;
+import com.heb.togglr.api.security.jwt.JwtAuthenticationFilter;
+import com.heb.togglr.api.security.jwt.LogoutHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.*;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-
-import com.heb.togglr.api.security.cloud.RestAuthSuccessHandler;
-import com.heb.togglr.api.security.cloud.RestAuthFailureHandler;
-import com.heb.togglr.api.security.jwt.JwtAuthenticationFilter;
-import com.heb.togglr.api.security.jwt.LogoutHandler;
-import com.heb.togglr.api.config.PreflightFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Order(99)
 @Profile({"local","clouddev"})
