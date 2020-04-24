@@ -15,7 +15,6 @@ logging:
     com:
       heb: debug
     default: debug
-    #root: debug
   path: logs
 server:
   error:
@@ -51,19 +50,6 @@ spring:
       resource:
         userInfoUri: ${SSOUSERINFOURI}
         preferTokenInfo: false
-# shikha configs
-#  security:
-#    oauth2:
-#      client:
-#        clientId: 84aac5770303bea335e3
-#        clientSecret: f8562eb2b18b849abfc8f4f2993fc2b743823c33
-#        accessTokenUri: https://github.com/login/oauth/access_token
-#        userAuthorizationUri: https://github.com/login/oauth/authorize?client_id=84aac5770303bea335e3&redirect_uri=http://localhost:3000/togglr
-#        clientAuthenticationScheme: form
-#        redirectUri: 'http://localhost:8080/oauth2/authorize/github?redirect_uri=http://localhost:3000/togglr'
-#      resource:
-#        userInfoUri: https://api.github.com/user
-#        preferTokenInfo: false
 app:
   auth:
     tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
