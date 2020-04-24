@@ -3,16 +3,12 @@ package com.heb.togglr.api.controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.heb.togglr.api.entities.SuperAdminsEntity;
-import com.heb.togglr.api.handlers.UpdateEventHandlers;
-import com.heb.togglr.api.models.responses.WebhookResponse;
 import com.heb.togglr.api.repositories.SuperAdminRepository;
 import com.heb.togglr.api.security.jwt.service.JwtService;
-import javassist.tools.web.BadHttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,7 +16,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -28,7 +23,6 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class SSOController {
