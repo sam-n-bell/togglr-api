@@ -71,8 +71,13 @@ public class SSOController {
     public ResponseEntity<?> ssologin() {
         StringBuilder ssoUrl = new StringBuilder();
 
-        ssoUrl.append(this.userAuthorizationUri)
-                .append("client_id=").append(this.clientId);
+        // will cause a blank to be returned if user did not configure the oauth docker env variables
+        if (!this.userAuthorizationUri.equalsIgnoreCase("None") && !this.redirectUri.equalsIgnoreCase("None")) {
+            ssoUrl.append(this.userAuthorizationUri)
+                    .append("client_id=")
+                    .append(this.clientId);
+        }
+
 
         return ResponseEntity.ok(ssoUrl.toString());
     }
