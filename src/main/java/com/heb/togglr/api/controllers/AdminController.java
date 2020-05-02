@@ -3,17 +3,16 @@ package com.heb.togglr.api.controllers;
 import com.heb.togglr.api.entities.AdminsEntity;
 import com.heb.togglr.api.entities.AdminsEntityPK;
 import com.heb.togglr.api.entities.AppEntity;
-import com.heb.togglr.api.entities.SuperAdminsEntity;
 import com.heb.togglr.api.repositories.AdminRepository;
 import com.heb.togglr.api.repositories.ApplicationsRepository;
-import com.heb.togglr.api.repositories.SuperAdminRepository;
 import javassist.tools.web.BadHttpRequest;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.security.Principal;
-import java.util.Optional;
 
 
 @RepositoryRestController

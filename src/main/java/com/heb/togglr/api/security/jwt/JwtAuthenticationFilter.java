@@ -36,7 +36,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author m228250
@@ -77,9 +76,9 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 if (this.jwtService.isValidToken(authToken, true)) {
 
                     final String ROLE_PREFIX = "ROLE_";
-                    Optional<SuperAdminsEntity> superAdmin = superAdminRepository.findById(username);
+                    SuperAdminsEntity superAdmin = superAdminRepository.findById(username).orElse(null);
                     List<GrantedAuthority> userRoles = new ArrayList<>();
-                    if (superAdmin.isPresent()) {
+                    if (superAdmin != null) {
                         userRoles.add(new SimpleGrantedAuthority(ROLE_PREFIX + "SUPERADMIN"));
                     }
 

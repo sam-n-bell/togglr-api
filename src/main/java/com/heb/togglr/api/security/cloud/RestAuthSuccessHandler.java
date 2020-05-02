@@ -1,18 +1,9 @@
 package com.heb.togglr.api.security.cloud;
 
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.heb.togglr.api.entities.SuperAdminsEntity;
 import com.heb.togglr.api.repositories.SuperAdminRepository;
+import com.heb.togglr.api.security.jwt.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
@@ -23,7 +14,13 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import com.heb.togglr.api.security.jwt.service.JwtService;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @Profile({"local","clouddev"})
@@ -49,9 +46,9 @@ public class RestAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandle
 
         final String ROLE_PREFIX = "ROLE_";
 
-        Optional<SuperAdminsEntity> superAdmin = superAdminRepository.findById(authentication.getName());
+        SuperAdminsEntity superAdmin = superAdminRepository.findById(authentication.getName()).orElse(null);
         List<GrantedAuthority> userRoles = new ArrayList<>();
-        if (superAdmin.isPresent()) {
+        if (superAdmin != null) {
             userRoles.add(new SimpleGrantedAuthority(ROLE_PREFIX + "SUPERADMIN"));
         }
 
