@@ -1,6 +1,7 @@
 package com.heb.togglr.api.security.cloud;
 
 
+import com.heb.togglr.api.constants.TogglrApiConstants;
 import com.heb.togglr.api.entities.SuperAdminsEntity;
 import com.heb.togglr.api.repositories.SuperAdminRepository;
 import com.heb.togglr.api.security.jwt.service.JwtService;
@@ -44,12 +45,10 @@ public class RestAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandle
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
-        final String ROLE_PREFIX = "ROLE_";
-
         SuperAdminsEntity superAdmin = superAdminRepository.findById(authentication.getName()).orElse(null);
         List<GrantedAuthority> userRoles = new ArrayList<>();
         if (superAdmin != null) {
-            userRoles.add(new SimpleGrantedAuthority(ROLE_PREFIX + "SUPERADMIN"));
+            userRoles.add(new SimpleGrantedAuthority(TogglrApiConstants.ROLE_PREFIX + TogglrApiConstants.SUPERADMIN_ROLE_NAME));
         }
 
         User userDetails = new User(authentication.getName(), "",  true, true, true, true, userRoles);

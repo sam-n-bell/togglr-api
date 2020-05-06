@@ -9,6 +9,7 @@
  */
 package com.heb.togglr.api.security.jwt;
 
+import com.heb.togglr.api.constants.TogglrApiConstants;
 import com.heb.togglr.api.entities.SuperAdminsEntity;
 import com.heb.togglr.api.repositories.SuperAdminRepository;
 import com.heb.togglr.api.security.jwt.service.JwtService;
@@ -75,11 +76,10 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 if (this.jwtService.isValidToken(authToken, true)) {
 
-                    final String ROLE_PREFIX = "ROLE_";
                     SuperAdminsEntity superAdmin = superAdminRepository.findById(username).orElse(null);
                     List<GrantedAuthority> userRoles = new ArrayList<>();
                     if (superAdmin != null) {
-                        userRoles.add(new SimpleGrantedAuthority(ROLE_PREFIX + "SUPERADMIN"));
+                        userRoles.add(new SimpleGrantedAuthority(TogglrApiConstants.ROLE_PREFIX + TogglrApiConstants.SUPERADMIN_ROLE_NAME));
                     }
 
                     UserDetails user = new User(username, "", true, true, true, true, userRoles);

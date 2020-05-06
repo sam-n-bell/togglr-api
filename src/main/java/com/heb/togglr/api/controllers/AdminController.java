@@ -3,6 +3,8 @@ package com.heb.togglr.api.controllers;
 import com.heb.togglr.api.entities.AdminsEntity;
 import com.heb.togglr.api.entities.AdminsEntityPK;
 import com.heb.togglr.api.entities.AppEntity;
+import com.heb.togglr.api.exceptions.AdminNotFoundException;
+import com.heb.togglr.api.exceptions.RemovingSelfAdminException;
 import com.heb.togglr.api.repositories.AdminRepository;
 import com.heb.togglr.api.repositories.ApplicationsRepository;
 import javassist.tools.web.BadHttpRequest;
@@ -33,7 +35,7 @@ public class AdminController {
 
         String[] parts = adminId.split("_");
         if(parts.length != 2){
-            throw new BadHttpRequest(new Exception("Could not fine admin with id " + adminId));
+            throw new BadHttpRequest(new AdminNotFoundException("Could not fine admin with id " + adminId));
         }
 
         AdminsEntityPK pk = new AdminsEntityPK();
@@ -42,11 +44,11 @@ public class AdminController {
         AdminsEntity adminsEntity = this.adminRepository.findById(pk).orElse(null);
 
         if(adminsEntity == null){
-            throw new BadHttpRequest(new Exception("Could not fine admin with id " + adminId));
+            throw new BadHttpRequest(new AdminNotFoundException("Could not fine admin with id " + adminId));
         }
 
         if (adminsEntity.getId().equalsIgnoreCase(principal.getName())) {
-            throw new BadHttpRequest(new Exception("Admin being deleted is same as user"));
+            throw new BadHttpRequest(new RemovingSelfAdminException("Admin being deleted is same as user"));
         }
 
         if(adminsEntity.getAppByAppId().getAdminsById().size() > 1){
