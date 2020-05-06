@@ -42,7 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Value("${heb.togglr.app-domain}")
     private String cookieDomain;
 
-    @Value("${heb.togglr.oauth.oauthEnabled}")
+    @Value("${heb.togglr.oauth.oauthEnabled:false}")
     private boolean oauthEnabled;
 
     private JwtService jwtService;
