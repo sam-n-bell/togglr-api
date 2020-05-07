@@ -35,7 +35,7 @@ public class AdminController {
 
         String[] parts = adminId.split("_");
         if(parts.length != 2){
-            throw new BadHttpRequest(new AdminNotFoundException("Could not fine admin with id " + adminId));
+            throw new BadHttpRequest(new AdminNotFoundException("Could not find admin with id " + adminId));
         }
 
         AdminsEntityPK pk = new AdminsEntityPK();
@@ -44,7 +44,7 @@ public class AdminController {
         AdminsEntity adminsEntity = this.adminRepository.findById(pk).orElse(null);
 
         if(adminsEntity == null){
-            throw new BadHttpRequest(new AdminNotFoundException("Could not fine admin with id " + adminId));
+            throw new BadHttpRequest(new AdminNotFoundException("Could not find admin with id " + adminId));
         }
 
         if (adminsEntity.getId().equalsIgnoreCase(principal.getName())) {
