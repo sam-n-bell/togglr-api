@@ -8,8 +8,8 @@ heb:
       tokenheader: X-TOGGLR-TOKEN
     oauth:
       tokenheader: OAUTH-TOKEN
-      userIdentification: ${SSOUSERIDFIELD}
-      oauthEnabled: ${HEBTOGGLROAUTHENABLED}
+      userIdentification: ${OAUTHUSERIDFIELD:}
+      oauthEnabled: ${HEBTOGGLROAUTHENABLED:false}
 logging:
   level:
     com:
@@ -41,12 +41,12 @@ spring:
   security:
     oauth2:
       client:
-        clientId: ${SSOCLIENTID}
-        clientSecret: ${SSOCLIENTSECRET}
-        accessTokenUri: ${SSOACCESSTOKENURI}
-        redirectUri: ${SSOREDIRECTURL}
-        userAuthorizationUri: ${SSOUSERAUTHORIZATIONURI} # query params client_id
+        clientId: ${OAUTHCLIENTID:}
+        clientSecret: ${OAUTHCLIENTSECRET:}
+        accessTokenUri: ${OAUTHACCESSTOKENURI:}
+        redirectUri: ${OAUTHREDIRECTURL:}
+        userAuthorizationUri: ${OAUTHUSERAUTHORIZATIONURI:} # query params client_id
         clientAuthenticationScheme: form
       resource:
-        userInfoUri: ${SSOUSERINFOURI}
+        userInfoUri: ${OAUTHUSERINFOURI:}
         preferTokenInfo: false

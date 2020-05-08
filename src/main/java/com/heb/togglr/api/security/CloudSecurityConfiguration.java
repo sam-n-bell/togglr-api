@@ -82,7 +82,7 @@ public class CloudSecurityConfiguration extends ResourceServerConfigurerAdapter 
         http
                 .authorizeRequests()
                 .antMatchers("/login").permitAll()
-                .antMatchers("/ssologin").permitAll()
+                .antMatchers("/oauth/login").permitAll()
                 .antMatchers("/oauth/signin/callback").permitAll()
                 .antMatchers("/error").permitAll()
                 .antMatchers("/features/active").permitAll()
