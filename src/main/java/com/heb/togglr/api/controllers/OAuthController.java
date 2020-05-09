@@ -56,8 +56,6 @@ public class OAuthController {
     @Value("${spring.security.oauth2.resource.userInfoUri}")
     private String userInfoUri;
 
-    @Value("${heb.togglr.oauth.oauthEnabled:false}")
-    private boolean oauthEnabled;
 
     @Autowired
     private JwtService jwtService;
