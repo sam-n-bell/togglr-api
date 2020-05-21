@@ -1,37 +1,37 @@
 package com.heb.togglr.api.validators;
 
 import org.springframework.data.rest.core.RepositoryConstraintViolationException;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
+    /**
+     * This handles cases when entity bodies fail checks in a validator class.
+     * Returns the group of error messages in a human-readable format.
+     * @param ex
+     * @return
+     */
     @ExceptionHandler({RepositoryConstraintViolationException.class})
-    public ResponseEntity<Object> handleAccessDeniedException(Exception ex, WebRequest request) {
-        RepositoryConstraintViolationException nevEx = (RepositoryConstraintViolationException) ex;
+    public ResponseEntity<Object> handleEntityValidationExceptions(Exception ex) {
+        RepositoryConstraintViolationException repositoryConstraintViolationException = (RepositoryConstraintViolationException) ex;
 
-        List<FieldError> errors = nevEx.getErrors().getFieldErrors();//nevEx.getErrors().getAllErrors().stream().map(p -> p.toString()).collect(Collectors.joining("\n"));
+        List<FieldError> errors = repositoryConstraintViolationException.getErrors().getFieldErrors();
 
-        List<String> errorCodes = new ArrayList<>();
+        StringBuilder errorMessage = new StringBuilder();
+
         for (FieldError error: errors) {
-            errorCodes.add(error.getCode());
+            errorMessage.append(error.getCode());
+            errorMessage.append(". ");
         }
 
-        CustomErrorResponse customErrorResponse = new CustomErrorResponse(HttpStatus.BAD_REQUEST, errorCodes);
-
-        System.out.println(customErrorResponse.getMessage());
-        return new ResponseEntity<Object>(customErrorResponse, new HttpHeaders(),
-                HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<Object>(errorMessage.toString().trim(), HttpStatus.BAD_REQUEST);
     }
 }

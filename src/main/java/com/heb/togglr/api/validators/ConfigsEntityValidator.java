@@ -1,17 +1,13 @@
 package com.heb.togglr.api.validators;
 
-import com.heb.togglr.api.entities.AppEntity;
-import com.heb.togglr.api.entities.ConfigsEntity;
-import com.heb.togglr.api.entities.FeatureEntity;
+import com.heb.togglr.api.entities.*;
 import com.heb.togglr.api.repositories.ApplicationsRepository;
-import com.heb.togglr.api.repositories.ConfigsRepository;
 import com.heb.togglr.api.repositories.FeatureRepository;
+import com.heb.togglr.api.repositories.KeysRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-
-import java.util.Optional;
 
 @Component("beforeCreateConfigsEntityValidator")
 public class ConfigsEntityValidator implements Validator {
@@ -22,6 +18,9 @@ public class ConfigsEntityValidator implements Validator {
     @Autowired
     FeatureRepository featureRepository;
 
+    @Autowired
+    KeysRepository keysRepository;
+
     @Override
     public boolean supports(Class<?> clazz) {
         return ConfigsEntity.class.equals(clazz);
@@ -31,22 +30,25 @@ public class ConfigsEntityValidator implements Validator {
     public void validate(Object target, Errors errors) {
         ConfigsEntity configsEntity = (ConfigsEntity) target;
 
+
+        if (!isAppIdValid(configsEntity.getAppId())) {
+            errors.rejectValue("appId", "appId (App ID) is not valid");
+        }
+
         if (configsEntity.getKeyName() == null || configsEntity.getKeyName().trim().length() == 0) {
-            errors.rejectValue("keyName", "missing valid keyName property");
+            errors.rejectValue("keyName", "Missing valid keyName (key name) property");
+        } else if (!doesKeyExistForApp(configsEntity.getAppId(), configsEntity.getKeyName())) {
+            errors.rejectValue("keyName", "Could not find specified key for given app");
         }
 
         if (configsEntity.getConfigValue() == null) {
-            errors.rejectValue("configValue", "missing valid configValue property");
-        } else if (checkConfigValue(configsEntity.getConfigValue())) {
-            errors.rejectValue("configValue", "configValue is not valid");
+            errors.rejectValue("configValue", "Missing valid configValue (config value) property");
+        } else if (badConfigValue(configsEntity.getConfigValue())) {
+            errors.rejectValue("configValue", "Letters, numbers, and hyphens only for config value");
         }
 
-        if (isAppIdValid(configsEntity.getAppId())) {
-            errors.rejectValue("appId", "appId is not valid");
-        }
-
-        if (isFeatureIdValid(configsEntity.getFeatureId())) {
-            errors.rejectValue("featureId", "featureId is not valid");
+        if (!isFeatureIdValid(configsEntity.getFeatureId())) {
+            errors.rejectValue("featureId", "featureId (Feature ID) is not valid");
         }
 
     }
@@ -62,8 +64,10 @@ public class ConfigsEntityValidator implements Validator {
             return false;
         }
 
-        Optional<AppEntity> appEntity = applicationsRepository.findById(id);
-        if (!appEntity.isPresent()) {return false;}
+        AppEntity appEntity = applicationsRepository.findById(id).orElse(null);
+        if (appEntity == null) {
+            return false;
+        }
 
         return true;
     }
@@ -78,9 +82,22 @@ public class ConfigsEntityValidator implements Validator {
             return false;
         }
 
-        Optional<FeatureEntity> featureEntity = featureRepository.findById(id);
-        if (!featureEntity.isPresent()) {return false;}
+        FeatureEntity featureEntity = featureRepository.findById(id).orElse(null);
+        if (featureEntity == null) {
+            return false;
+        }
 
+        return true;
+    }
+
+    private boolean doesKeyExistForApp(Integer appId, String keyName) {
+        KeysEntityPK pk = new KeysEntityPK();
+        pk.setAppId(appId);
+        pk.setKeyName(keyName);
+        KeysEntity keysEntity = this.keysRepository.findById(pk).orElse(null);
+        if(keysEntity == null){
+            return false;
+        }
         return true;
     }
 
@@ -91,7 +108,7 @@ public class ConfigsEntityValidator implements Validator {
      * @param input
      * @return
      */
-    private boolean checkConfigValue(String input) {
+    private boolean badConfigValue(String input) {
         String pattern = "^[-a-zA-Z0-9]+$"; //alphanumeric and hyphens
         return (input.trim().length() == 0 || !input.matches(pattern));
     }

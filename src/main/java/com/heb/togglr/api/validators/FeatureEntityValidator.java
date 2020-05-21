@@ -1,6 +1,5 @@
 package com.heb.togglr.api.validators;
 
-import com.heb.togglr.api.entities.ConfigsEntity;
 import com.heb.togglr.api.entities.FeatureEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -21,28 +20,28 @@ public class FeatureEntityValidator implements Validator {
          * Check that descr is present/valid
          */
         if (featureEntity.getDescr() == null || featureEntity.getDescr().trim().length() == 0) {
-            errors.rejectValue("descr", "missing valid descr property");
+            errors.rejectValue("descr", "Missing valid descr (description) property");
         }
 
         /**
          * Check that appId is present/valid
          */
-        if (featureEntity.getAppId() == null) {
-            errors.rejectValue("appId", "missing valid appId property");
+        if (featureEntity.getAppId() == null || featureEntity.getAppId() < 1) {
+            errors.rejectValue("appId", "Missing valid appId (App ID) property");
         }
 
         /**
          * Check that negation is present
          */
         if (featureEntity.getNegation() == null) {
-            errors.rejectValue("negation", "missing negation property");
+            errors.rejectValue("negation", "Missing negation property");
         }
 
         /**
          * Check that active is present
          */
         if (featureEntity.getActive() == null) {
-            errors.rejectValue("active", "missing active property");
+            errors.rejectValue("active", "Missing active property");
         }
     }
 }
