@@ -24,24 +24,25 @@ public class AdminsEntityValidator implements Validator {
         AdminsEntity adminsEntity = (AdminsEntity) target;
 
         if (adminsEntity.getId() == null) {
-            errors.rejectValue("id", "Missing a valid id (Admin ID)");
+            errors.rejectValue("id", "Nonempty id (Admin ID) required");
         }
 
         if (!isAppIdValid(adminsEntity.getAppId())) {
-            errors.rejectValue("appId", "Missing a valid appId (App ID)");
-        } else if (adminsEntity.getAppId() < 1) {
-            errors.rejectValue("appId", "Not a valid appId (App ID)");
+            errors.rejectValue("appId", "Nonempty appId (Application ID) required");
+        } else {
+            AppEntity appEntity = applicationsRepository.findById(adminsEntity.getAppId()).orElse(null);
+            if (appEntity == null) {
+                errors.rejectValue("appId", "App for appID (App ID) does not exist");
+            }
         }
     }
 
 
     private boolean isAppIdValid(Integer id) {
-
         AppEntity appEntity = this.applicationsRepository.findById(id).orElse(null);
         if (appEntity == null) {
             return false;
         }
-
         return true;
     }
 

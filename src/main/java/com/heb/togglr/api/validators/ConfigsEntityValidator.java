@@ -30,76 +30,49 @@ public class ConfigsEntityValidator implements Validator {
     public void validate(Object target, Errors errors) {
         ConfigsEntity configsEntity = (ConfigsEntity) target;
 
-
-        if (!isAppIdValid(configsEntity.getAppId())) {
-            errors.rejectValue("appId", "appId (App ID) is not valid");
+        // make sure app is non-null and is a real app
+        if (configsEntity.getAppId() == null) {
+            errors.rejectValue("appId", "Nonempty appId (Application ID) required");
+        } else {
+            AppEntity appEntity = applicationsRepository.findById(configsEntity.getAppId()).orElse(null);
+            if (appEntity == null) {
+                errors.rejectValue("appId", "App for given appId does not exist");
+            }
         }
 
+        // make sure key is non-null and is a real key for given app
         if (configsEntity.getKeyName() == null || configsEntity.getKeyName().trim().length() == 0) {
-            errors.rejectValue("keyName", "Missing valid keyName (key name) property");
-        } else if (!doesKeyExistForApp(configsEntity.getAppId(), configsEntity.getKeyName())) {
-            errors.rejectValue("keyName", "Could not find specified key for given app");
+            errors.rejectValue("keyName", "Nonempty keyName (key name) required");
+        } else {
+            KeysEntityPK pk = new KeysEntityPK();
+            pk.setAppId(configsEntity.getAppId());
+            pk.setKeyName(configsEntity.getKeyName());
+            KeysEntity keysEntity = this.keysRepository.findById(pk).orElse(null);
+            if(keysEntity == null){
+                errors.rejectValue("keyName", "Could not find specified key for given app");
+            }
         }
 
+
+        // make sure feature is non-null and is a real feature
+        if (configsEntity.getFeatureId() == null) {
+            errors.rejectValue("featureId", "Nonempty featureId (Feature ID) required");
+        } else {
+            FeatureEntity featureEntity = featureRepository.findById(configsEntity.getFeatureId()).orElse(null);
+            if (featureEntity == null) {
+                errors.rejectValue("featureId", "Could not find specified feature for given featureId");
+            }
+        }
+
+        // make sure the config value is non-null and matches regex pattern
         if (configsEntity.getConfigValue() == null) {
-            errors.rejectValue("configValue", "Missing valid configValue (config value) property");
+            errors.rejectValue("configValue", "Nonempty configValue (config name) required");
         } else if (badConfigValue(configsEntity.getConfigValue())) {
             errors.rejectValue("configValue", "Letters, numbers, and hyphens only for config value");
         }
 
-        if (!isFeatureIdValid(configsEntity.getFeatureId())) {
-            errors.rejectValue("featureId", "featureId (Feature ID) is not valid");
-        }
-
     }
 
-    /**
-     * Make sure that an App ID (integer) exists and is valid
-     * @param id
-     * @return
-     */
-    private boolean isAppIdValid(Integer id) {
-
-        if (id == null || id < 1) {
-            return false;
-        }
-
-        AppEntity appEntity = applicationsRepository.findById(id).orElse(null);
-        if (appEntity == null) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Make sure that a feature ID (integer) exists and is valid
-     * @param id
-     * @return
-     */
-    private boolean isFeatureIdValid(Integer id) {
-        if (id == null || id < 1) {
-            return false;
-        }
-
-        FeatureEntity featureEntity = featureRepository.findById(id).orElse(null);
-        if (featureEntity == null) {
-            return false;
-        }
-
-        return true;
-    }
-
-    private boolean doesKeyExistForApp(Integer appId, String keyName) {
-        KeysEntityPK pk = new KeysEntityPK();
-        pk.setAppId(appId);
-        pk.setKeyName(keyName);
-        KeysEntity keysEntity = this.keysRepository.findById(pk).orElse(null);
-        if(keysEntity == null){
-            return false;
-        }
-        return true;
-    }
 
     /**
      * Checks that a config name is alphanumeric and

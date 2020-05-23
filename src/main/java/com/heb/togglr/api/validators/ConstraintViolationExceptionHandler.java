@@ -12,7 +12,7 @@ import javax.validation.ConstraintViolationException;
 public class ConstraintViolationExceptionHandler {
 
     /**
-     * This handles cases when entity fails @Valid check
+     * This handles cases when entity fails @Valid check. As of 5/23/20, this is done for AppEntities.
      * Returns the group of error messages in a human-readable format.
      * @param e
      * @return
