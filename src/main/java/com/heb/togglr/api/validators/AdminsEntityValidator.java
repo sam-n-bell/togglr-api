@@ -27,7 +27,7 @@ public class AdminsEntityValidator implements Validator {
             errors.rejectValue("id", "Nonempty id (Admin ID) required");
         }
 
-        if (!isAppIdValid(adminsEntity.getAppId())) {
+        if (adminsEntity.getAppId() == null) {
             errors.rejectValue("appId", "Nonempty appId (Application ID) required");
         } else {
             AppEntity appEntity = applicationsRepository.findById(adminsEntity.getAppId()).orElse(null);
@@ -37,14 +37,6 @@ public class AdminsEntityValidator implements Validator {
         }
     }
 
-
-    private boolean isAppIdValid(Integer id) {
-        AppEntity appEntity = this.applicationsRepository.findById(id).orElse(null);
-        if (appEntity == null) {
-            return false;
-        }
-        return true;
-    }
 
 
 }
