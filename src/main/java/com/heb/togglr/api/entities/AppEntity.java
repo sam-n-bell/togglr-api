@@ -2,7 +2,6 @@ package com.heb.togglr.api.entities;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -78,7 +77,6 @@ public class AppEntity {
     }
 
     @OneToMany(mappedBy = "appByAppId", cascade = CascadeType.REMOVE)
-    @NotEmpty(message = "Need an admin for this app")
     public Collection<AdminsEntity> getAdminsById() {
         return adminsById;
     }
