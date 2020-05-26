@@ -104,7 +104,7 @@ public class UpdateEventHandlers {
         }
     }
 
-    public void callWebhook(String webhookUrl){
+    private void callWebhook(String webhookUrl){
         if(webhookUrl != null) {
             logger.debug("Calling webhook, triggered by update.");
             logger.trace("Webhook URL: " + webhookUrl);
@@ -114,7 +114,7 @@ public class UpdateEventHandlers {
                     logger.debug("Webhook update successful.");
                 }
             }catch (RestClientException e){
-                logger.debug("An exception happened when calling Webhook. See error log for details.");
+                logger.debug("An exception happened inside callWebhook. See error log for details.");
                 logger.error(e.getMessage());
             }
         }
