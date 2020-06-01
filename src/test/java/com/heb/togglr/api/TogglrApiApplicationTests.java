@@ -61,7 +61,7 @@ public class TogglrApiApplicationTests {
         MockitoAnnotations.initMocks(this);
     }
 
-    //    Testing FeatureEntitiesController's removeFeature method
+    //Testing FeatureEntitiesController's removeFeature method
     @Test
     public void removeFeatureTest() throws Exception {
         Integer featureId = 1;
@@ -88,6 +88,7 @@ public class TogglrApiApplicationTests {
         return featureEntity;
     }
 
+    //Testing KeysController's removeKey method
     @Test
     public void removeKeyTest() throws Exception {
         String keyId = "City";

@@ -33,15 +33,16 @@ public class FeatureEntitiesController {
 
         FeatureEntity featureEntity = this.featureRepository.findById(featureId).orElse(null);
 
-        if(featureEntity == null){
+        if (featureEntity == null) {
             throw new BadHttpRequest(new Exception("Could not fine admin with id " + featureId));
         }
 
         Collection<ConfigsEntity> configs = featureEntity.getConfigsById();
 
         this.configsRepository.deleteAll(configs);
-
-        featureEntity.getConfigsById().clear();
+        if (featureEntity.getConfigsById() != null) {
+            featureEntity.getConfigsById().clear();
+        }
         this.featureRepository.delete(featureEntity);
     }
 }
